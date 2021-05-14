@@ -1,8 +1,8 @@
+import sys
 import numpy as np
 import pandas as pd
-
-from tensorflow import keras
 from pprint import pprint
+np.set_printoptions(threshold=sys.maxsize)
 
 
 def generate_time_series(batch_size, n_steps, seed=10):
@@ -15,22 +15,26 @@ def generate_time_series(batch_size, n_steps, seed=10):
     return series[..., np.newaxis].astype(np.float32)
 
 
-def gen_data_series():
-    n_steps = 50
-    series = generate_time_series(10000, n_steps + 1)
-    X_train, Y_train = series[:7000, :n_steps], series[:7000, -1]
-    X_valid, Y_valid = series[7000:9000, :n_steps], series[7000:9000, -1]
-    X_test, Y_test = series[9000:, :n_steps], series[9000:, -1]
-    return X_train, X_valid, series, n_steps
-
-
-def rnn_model():
+def data():
     n_steps = 50
 
     series = generate_time_series(10000, n_steps + 10)
+    print(series.shape)
     X_train, Y_train = series[:7000, :n_steps], series[:7000, -10:, 0]
     X_valid, Y_valid = series[7000:9000, :n_steps], series[7000:9000, -10:, 0]
     X_test, Y_test = series[9000:, :n_steps], series[9000:, -10:, 0]
+
+    print("X_train.shape:", X_train.shape)
+    print("Y_train.shape:", Y_train.shape)
+
+    print("X_valid.shape:", X_valid.shape)
+    print("Y_valid.shape:", Y_valid.shape)
+
+    print("X_test.shape:", X_test.shape)
+    print("Y_test.shape:", Y_test.shape)
+    pprint(Y_train[0])
+
+    pprint(X_train[:, -1].shape)
 
     Y = np.empty((10000, n_steps, 10))  # each target is a sequence of 10D vectors
     for step_ahead in range(1, 10 + 1):
@@ -38,27 +42,8 @@ def rnn_model():
     Y_train = Y[:7000]
     Y_valid = Y[7000:9000]
     Y_test = Y[9000:]
-    #
 
-
-    model = keras.models.Sequential(
-        [
-            keras.layers.SimpleRNN(20, return_sequences=True, input_shape=[None, 1]),
-            keras.layers.SimpleRNN(20, return_sequences=True),
-            keras.layers.TimeDistributed(keras.layers.Dense(10))
-        ]
-    )
-
-    def last_time_step_mse(Y_true, Y_pred):
-        print(Y_true[:, -1].shape)
-        return keras.metrics.mean_squared_error(Y_true[:, -1], Y_pred[:, -1])
-
-    optimizer = keras.optimizers.Adam(lr=0.01)
-    model.compile(loss="mse", optimizer=optimizer, metrics=[last_time_step_mse])
-    model.fit(X_train, Y_train, epochs=20, verbose=1)
-    print(model.evaluate(X_valid, Y_valid))
-    model.save_weights("final_result.h5")
 
 
 if __name__ == "__main__":
-    rnn_model()
+    data()
