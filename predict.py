@@ -3,7 +3,7 @@ from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
 
 
-def plot_func_with_ground_truth(ground_truth_data, input_data, predictions):
+def plot_predict_test_data(ground_truth_data, input_data, predictions):
     fig, ax = plt.subplots(figsize=(16, 9))
     plt.plot(ground_truth_data, color="#D2875C", label="True Value")
     ax.plot(
@@ -16,10 +16,10 @@ def plot_func_with_ground_truth(ground_truth_data, input_data, predictions):
     plt.show()
 
 
-def plot_test_part(input_data, predictions):
+def plot_all_data(input_data, predictions):
     fig, ax = plt.subplots(figsize=(16, 9))
-    ax.plot(input_data, color='red', label='True Testing Value')
-    plt.plot(predictions, color='blue', label='Predicted Testing Value')
+    ax.plot(input_data, color="#D2875C", label="True Testing Value")
+    plt.plot(predictions, color="#5372AB", label="Predicted Testing Value")
     plt.legend()
     plt.show()
 
@@ -34,16 +34,17 @@ def predict_func(input_data, model_name, scaler):
 if __name__ == "__main__":
     csv_file = "TY_climate_2017_2018.csv"
 
-    # get ground truth
-    df = pd.read_csv(csv_file)
-    df = df["TT-Avg(℃)"].values
-    df = df.reshape(-1, 1)
-
     # load date
-    train_data, test_data = load_data(csv_file)
+    train_data, test_data, column_name = load_data(csv_file)
     train_data, scaler_train = data_preprocessing(train_data)
     test_data, scaler_test = data_preprocessing(test_data)
 
+    # get ground truth
+    df = pd.read_csv(csv_file)
+    df = df[column_name].values
+    df = df.reshape(-1, 1)
+
+    # create data
     x_train, y_train = create_dataset(train_data)
     x_test, y_test = create_dataset(test_data)
 
@@ -53,13 +54,17 @@ if __name__ == "__main__":
     x_test = x_test.reshape(x_test.shape[0], 1, 1)
     y_test = y_test.reshape(y_test.shape[0], 1, 1)
 
+
+    # predict all data
+    all_data, scaler_all_data = data_preprocessing(df)
+    all_data_x, all_data_y = create_dataset(all_data)
+    all_data_x = all_data_x.reshape(all_data_x.shape[0], 1, 1)
+    all_data_y = all_data_y.reshape(all_data_y.shape[0], 1, 1)
+
     # predict
-    model_name = "saved_models/LSTM_003.h5"
-    predictions = predict_func(x_test, model_name, scaler_test)
-    print(len(y_train))
+    model_name = "saved_models_tt_avg/LSTM_001.h5"
+    predictions = predict_func(all_data_x, model_name, scaler_all_data)
+
     # plot
-    plot_func_with_ground_truth(df, y_train, predictions)
-
-
-
-
+    # plot_predict_test_data(df, all_data_y, predictions)
+    plot_all_data(df, predictions)
