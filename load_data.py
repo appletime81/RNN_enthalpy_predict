@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 def load_data(file_name):
     # load csv
-    column_name = "TT-Avg(℃)"  # column_name: TT-Avg(℃), MT-Avg(g)
+    column_name = "MT-Avg(g)"  # column_name: TT-Avg(℃), MT-Avg(g)
     df = pd.read_csv(file_name)
     df = df[column_name]
 

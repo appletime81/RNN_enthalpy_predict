@@ -5,19 +5,23 @@ from tensorflow.keras.callbacks import TensorBoard
 import os
 
 
-def build_name():
-    model_paths = os.listdir("saved_models")
+def build_name(column_name):
+    if column_name == "TT-Avg(℃)":
+        model_paths = os.listdir("saved_models_tt_avg")
+    elif column_name == "MT-Avg(g)":
+        model_paths = os.listdir("saved_models_mt_avg")
+
     if len(model_paths) == 0:
         return "LSTM_001.h5"
     else:
         model_paths = sorted(model_paths, key=lambda x: int(x[-6:-3]))
         model_name = str(int(model_paths[len(model_paths) - 1][-6:-3]) + 1)
         if len(model_name) == 1:
-            return "LSTM_00" + model_name + ".h5"
+            return f"LSTM_00{model_name}.h5"
         elif len(model_name) == 2:
-            return "LSTM_0" + model_name + ".h5"
+            return f"LSTM_0{model_name}.h5"
         else:
-            return "LSTM_" + model_name + ".h5"
+            return f"LSTM_{model_name}.h5"
 
 
 def main():
@@ -50,9 +54,9 @@ def main():
 
     # save model
     if column_name == "TT-Avg(℃)":
-        lstm_model.save(f"saved_models_tt_avg/{build_name()}")
+        lstm_model.save(f"saved_models_tt_avg/{build_name(column_name)}")
     elif column_name == "MT-Avg(g)":
-        lstm_model.save(f"saved_models_mt_avg/{build_name()}")
+        lstm_model.save(f"saved_models_mt_avg/{build_name(column_name)}")
 
 
 if __name__ == "__main__":
