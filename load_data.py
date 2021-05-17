@@ -5,8 +5,9 @@ from sklearn.preprocessing import MinMaxScaler
 
 def load_data(file_name):
     # load csv
+    column_name = "TT-Avg(℃)"  # column_name: TT-Avg(℃), MT-Avg(g)
     df = pd.read_csv(file_name)
-    df = df["TT-Avg(℃)"]  # TT-Avg(�J), MT-Avg(g)
+    df = df[column_name]
 
     # convert to numpy format
     data = np.array(df)
@@ -14,7 +15,7 @@ def load_data(file_name):
     # split train data and test data
     train_data = data[:int(len(data) * 0.9)].reshape(-1, 1)
     test_data = data[int(len(data) * 0.9) - 1:].reshape(-1, 1)
-    return train_data, test_data
+    return train_data, test_data, column_name
 
 
 def data_preprocessing(data):
