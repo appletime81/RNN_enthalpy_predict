@@ -48,7 +48,7 @@ def main():
     lstm_model.fit(x_train, y_train, epochs=50, batch_size=32, callbacks=[tensorboard_call_back])
 
     # save model
-    lstm_model.save(f"{build_name()}")
+    lstm_model.save(f"saved_models/{build_name()}")
 
 
 if __name__ == "__main__":
