@@ -1,23 +1,36 @@
 import pandas as pd
 import numpy as np
-from pprint import pprint
+from sklearn.preprocessing import MinMaxScaler
 
 
-def load_data(fileName):
-    data_series = pd.read_csv(fileName).values.tolist()
-    temp_list = []
-    mass_list = []
+def load_data(file_name):
+    # load csv
+    df = pd.read_csv(file_name)
+    df = df["TT-Avg(�J)"]  # TT-Avg(�J), MT-Avg(g)
 
-    for data_row in data_series:
-        temp_list.append(data_row[7])
-        mass_list.append(data_row[8])
+    # convert to numpy format
+    data = np.array(df)
 
-    temp_datas = np.array(temp_list)
-    mass_datas = np.array(mass_list)
+    # split train data and test data
+    train_data = data[:int(len(data) * 0.9)].reshape(-1, 1)
+    test_data = data[int(len(data) * 0.9) - 1:].reshape(-1, 1)
+    return train_data, test_data
 
-    return [temp_datas, mass_datas]
+
+def data_preprocessing(train_data, test_data):
+    # MinMaxScaler
+    scalar = MinMaxScaler(feature_range=(0, 1))
+    train_data = scalar.fit_transform(train_data)
+    test_data = scalar.fit_transform(test_data)
+    return train_data, test_data, scalar
 
 
-if __name__ == "__main__":
-    csv_file = "TY_climate_2017_2018.csv"
-    x, y = load_data(csv_file)
+def create_dataset(data):
+    x = []
+    y = []
+    for i in range(1, data.shape[0]):
+        x.append(data[i - 1:i, 0])
+        y.append(data[i, 0])
+    x = np.array(x)
+    y = np.array(y)
+    return x, y
