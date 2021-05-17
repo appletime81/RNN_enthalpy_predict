@@ -19,9 +19,9 @@ def load_data(file_name):
 
 def data_preprocessing(data):
     # MinMaxScaler
-    scalar = MinMaxScaler(feature_range=(0, 1))
-    data = scalar.fit_transform(data)
-    return data, scalar
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    data = scaler.fit_transform(data)
+    return data, scaler
 
 
 def create_dataset(data):
