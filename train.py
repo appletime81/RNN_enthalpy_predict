@@ -54,8 +54,10 @@ def main():
 
     # save model
     if column_name == "TT-Avg(℃)":
+        print(column_name)
         lstm_model.save(f"saved_models_tt_avg/{build_name(column_name)}")
     elif column_name == "MT-Avg(g)":
+        print(column_name)
         lstm_model.save(f"saved_models_mt_avg/{build_name(column_name)}")
 
 

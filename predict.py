@@ -62,9 +62,9 @@ if __name__ == "__main__":
     all_data_y = all_data_y.reshape(all_data_y.shape[0], 1, 1)
 
     # predict
-    model_name = "saved_models_tt_avg/LSTM_001.h5"
-    predictions = predict_func(all_data_x, model_name, scaler_all_data)
+    model_name = "saved_models_mt_avg/LSTM_001.h5"
+    predictions = predict_func(x_test, model_name, scaler_test)
 
     # plot
-    # plot_predict_test_data(df, all_data_y, predictions)
-    plot_all_data(df, predictions)
+    plot_predict_test_data(df, y_train, predictions)
+    # plot_all_data(df, predictions)
