@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 
 
 def plot_func_with_ground_truth(ground_truth_data, input_data, predictions):
-    fig, ax = plt.subplots()
-    plt.plot(ground_truth_data, color="red", label="True Value")
+    fig, ax = plt.subplots(figsize=(16, 9))
+    plt.plot(ground_truth_data, color="#D2875C", label="True Value")
     ax.plot(
         range(len(input_data) + 1, len(input_data) + 1 + len(predictions)),
         predictions,
-        color="blue",
+        color="#5372AB",
         label="Predicted Testing Value"
     )
     plt.legend()
@@ -17,7 +17,7 @@ def plot_func_with_ground_truth(ground_truth_data, input_data, predictions):
 
 
 def plot_test_part(input_data, predictions):
-    fig, ax = plt.subplots(figsize=(8, 4))
+    fig, ax = plt.subplots(figsize=(16, 9))
     ax.plot(input_data, color='red', label='True Testing Value')
     plt.plot(predictions, color='blue', label='Predicted Testing Value')
     plt.legend()
