@@ -2,7 +2,7 @@
 .idea
 .ipynb_checkpoints
 __pycache__
-log
+log/train
 
 # file
 .DS_Store
