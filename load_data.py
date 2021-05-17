@@ -17,12 +17,11 @@ def load_data(file_name):
     return train_data, test_data
 
 
-def data_preprocessing(train_data, test_data):
+def data_preprocessing(data):
     # MinMaxScaler
     scalar = MinMaxScaler(feature_range=(0, 1))
-    train_data = scalar.fit_transform(train_data)
-    test_data = scalar.fit_transform(test_data)
-    return train_data, test_data, scalar
+    data = scalar.fit_transform(data)
+    return data, scalar
 
 
 def create_dataset(data):
