@@ -56,18 +56,20 @@ if __name__ == "__main__":
     x_test = x_test.reshape(x_test.shape[0], 1, 1)
     y_test = y_test.reshape(y_test.shape[0], 1, 1)
 
-
     # predict all data
     all_data, scaler_all_data = data_preprocessing(df)
     all_data_x, all_data_y = create_dataset(all_data)
     all_data_x = all_data_x.reshape(all_data_x.shape[0], 1, 1)
     all_data_y = all_data_y.reshape(all_data_y.shape[0], 1, 1)
 
+    # ---------------------------------------------------------------------------
     # predict
     model_name = "saved_models_tt_avg/LSTM_002.h5"
-    # model_name = "saved_models_mt_avg/LSTM_002.h5"
     predictions = predict_func(x_test, model_name, scaler_test)
+
+    # model_name = "saved_models_mt_avg/LSTM_002.h5"
     # predictions = predict_func(all_data_x, model_name, scaler_all_data)
+    # ---------------------------------------------------------------------------
 
     # plot predicted part and all ground truth
     plot_predict_test_data(df, y_train, predictions)
