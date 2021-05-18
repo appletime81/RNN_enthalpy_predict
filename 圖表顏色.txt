@@ -1,0 +1,7 @@
+*tt_avg
+    1. ground truth 藍
+    2. predict value 綠
+
+* mt_avg
+    1. ground truth 紅
+    2. predict value 橘

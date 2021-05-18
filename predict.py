@@ -1,27 +1,28 @@
 from load_data import *
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+mpl.style.use("seaborn")
 
 
 def plot_predict_test_data(ground_truth_data, input_data, predictions):
     fig, ax = plt.subplots(figsize=(16, 9))
-    plt.plot(ground_truth_data, color="#D2875C", label="True Value")
+    plt.plot(ground_truth_data, color="tab:red", label="True Value")
     ax.plot(
         range(len(input_data) + 1, len(input_data) + 1 + len(predictions)),
         predictions,
-        color="#5372AB",
+        color="tab:blue",
         label="Predicted Testing Value"
     )
     plt.legend()
     plt.show()
 
 
-def plot_all_data(input_data, predictions):
-    fig, ax = plt.subplots(figsize=(16, 9))
-    ax.plot(input_data, color="#D2875C", label="True Testing Value")
-    plt.plot(predictions, color="#5372AB", label="Predicted Testing Value")
-    plt.legend()
-    plt.show()
+def plot_all_data(input_data, predictions, fig, ax, **label):
+
+    ax.plot(input_data, color="tab:red", label=label["ground_truth"])
+    ax.plot(predictions, color="tab:blue", label=label["predict_value"])
+    return fig, ax
 
 
 def predict_func(input_data, model_name, scaler):
@@ -33,9 +34,10 @@ def predict_func(input_data, model_name, scaler):
 
 if __name__ == "__main__":
     csv_file = "TY_climate_2017_2018.csv"
+    column_name = "MT-Avg(g)"  # column_name: TT-Avg(℃), MT-Avg(g)
 
     # load date
-    train_data, test_data, column_name = load_data(csv_file)
+    train_data, test_data = load_data(csv_file, column_name)
     train_data, scaler_train = data_preprocessing(train_data)
     test_data, scaler_test = data_preprocessing(test_data)
 
@@ -68,4 +70,11 @@ if __name__ == "__main__":
 
     # plot
     # plot_predict_test_data(df, y_train, predictions)
-    plot_all_data(df, predictions)
+    labels = {
+        "ground_truth": "True Testing Value",
+        "predict_value": "Predicted Testing Value"
+    }
+    fig, ax = plt.subplots(figsize=(16, 9))
+    fig, ax = plot_all_data(df, predictions, fig, ax, **labels)
+    plt.legend()
+    plt.show()
