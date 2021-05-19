@@ -18,10 +18,16 @@ def predict_func(input_data, model_name, scaler):
     return predictions
 
 
+def enthalpy(avg_tt, avg_mt):
+    enth = ((1.006 * avg_tt) + (avg_mt / 1000 * (2501 + (1.805 * avg_tt))))
+    return enth
+
+
 def main():
     csv_file = "TY_climate_2017_2018.csv"
     column_name_tt_avg = "TT-Avg(℃)"  # column_name: TT-Avg(℃), MT-Avg(g)
     column_name_mt_avg = "MT-Avg(g)"
+    column_name_enthalpy = "焓值計算(kj/kg)"
 
     # get ground truth
     df = pd.read_csv(csv_file)
@@ -31,6 +37,9 @@ def main():
 
     df_mt = df[column_name_mt_avg].values
     df_mt = df_mt.reshape(-1, 1)
+
+    df_enthalpy = df[column_name_enthalpy].values
+    df_enthalpy = df_enthalpy.reshape(-1, 1)
 
     #  get all data
     all_data_tt, scaler_all_data_tt = data_preprocessing(df_tt)
@@ -43,12 +52,16 @@ def main():
 
     colors_tt = ["tab:red", "tab:orange"]
     colors_mt = ["tab:blue", "tab:green"]
+    colors_enthalpy = ["black", "dimgray"]
 
     # predict
     model_name_tt = "saved_models_tt_avg/LSTM_002.h5"
     model_name_mt = "saved_models_mt_avg/LSTM_002.h5"
     predictions_tt = predict_func(all_data_tt_x, model_name_tt, scaler_all_data_tt)
     predictions_mt = predict_func(all_data_mt_x, model_name_mt, scaler_all_data_mt)
+
+    # cal enthalpy
+    predictions_enthalpy = enthalpy(predictions_tt, predictions_mt)
 
     # plot
     labels_tt = {
@@ -59,9 +72,14 @@ def main():
         "ground_truth": "True MT-Avg(g)",
         "predict_value": "Predicted MT-Avg(g)"
     }
+    labels_enthalpy = {
+        "ground_truth": "True Enthalpy",
+        "predict_value": "Predicted Enthalpy"
+    }
     fig, ax = plt.subplots(figsize=(16, 9))
     fig, ax = plot_all_data(df_tt, predictions_tt, fig, ax, colors_tt, **labels_tt)
     fig, ax = plot_all_data(df_mt, predictions_mt, fig, ax, colors_mt, **labels_mt)
+    fig, ax = plot_all_data(df_enthalpy, predictions_enthalpy, fig, ax, colors_enthalpy, **labels_enthalpy)
     plt.legend()
     plt.show()
 
