@@ -2,6 +2,7 @@ from load_data import *
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
 from matplotlib.style import use
+import numpy as np
 use("seaborn")
 
 
@@ -28,6 +29,7 @@ def main():
     column_name_tt_avg = "TT-Avg(℃)"  # column_name: TT-Avg(℃), MT-Avg(g)
     column_name_mt_avg = "MT-Avg(g)"
     column_name_enthalpy = "焓值計算(kj/kg)"
+    column_name_8ch = "8CH"
 
     # get ground truth
     df = pd.read_csv(csv_file)
@@ -41,6 +43,15 @@ def main():
     df_enthalpy = df[column_name_enthalpy].values
     df_enthalpy = df_enthalpy.reshape(-1, 1)
 
+    df_8ch = df[column_name_8ch]
+    list_8ch = []
+    for i in range(len(df_8ch)):
+        try:
+            list_8ch.append(int(df_8ch[i]))
+        except ValueError:
+            list_8ch.append(int(df_8ch[i].replace(",", "")))
+    df_8ch = np.array(list_8ch).reshape(-1, 1).astype("float32")
+
     #  get all data
     all_data_tt, scaler_all_data_tt = data_preprocessing(df_tt)
     all_data_tt_x, _ = create_dataset(all_data_tt)
@@ -53,6 +64,7 @@ def main():
     colors_tt = ["tab:red", "tab:orange"]
     colors_mt = ["tab:blue", "tab:green"]
     colors_enthalpy = ["black", "dimgray"]
+    colors_8ch = ["darkviolet", "plum"]
 
     # predict
     model_name_tt = "saved_models_tt_avg/LSTM_002.h5"
@@ -76,10 +88,16 @@ def main():
         "ground_truth": "True Enthalpy",
         "predict_value": "Predicted Enthalpy"
     }
-    fig, ax = plt.subplots(figsize=(16, 9))
-    fig, ax = plot_all_data(df_tt, predictions_tt, fig, ax, colors_tt, **labels_tt)
-    fig, ax = plot_all_data(df_mt, predictions_mt, fig, ax, colors_mt, **labels_mt)
-    fig, ax = plot_all_data(df_enthalpy, predictions_enthalpy, fig, ax, colors_enthalpy, **labels_enthalpy)
+    labels_8ch = {
+        "ground_truth": "True 8CH",
+        "predict_value": "Predicted 8CH"
+    }
+
+    fig, ax = plt.subplots(figsize=(25, 16))
+    fig, ax = plot_all_data(df_tt[1:], predictions_tt, fig, ax, colors_tt, **labels_tt)
+    fig, ax = plot_all_data(df_mt[1:], predictions_mt, fig, ax, colors_mt, **labels_mt)
+    fig, ax = plot_all_data(df_enthalpy[1:], predictions_enthalpy, fig, ax, colors_enthalpy, **labels_enthalpy)
+    fig, ax = plot_all_data(df_8ch[1:], predictions_enthalpy*25.9, fig, ax, colors_8ch, **labels_8ch)
     plt.legend()
     plt.show()
 
