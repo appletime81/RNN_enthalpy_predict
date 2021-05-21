@@ -33,8 +33,8 @@ def predict_func(input_data, model_name, scaler):
 
 if __name__ == "__main__":
     csv_file = "TY_climate_2017_2018.csv"
-    column_name = "TT-Avg(℃)"  # column_name: TT-Avg(℃), MT-Avg(g)
-    # column_name = "MT-Avg(g)"
+    # column_name = "TT-Avg(℃)"  # column_name: TT-Avg(℃), MT-Avg(g)
+    column_name = "MT-Avg(g)"
 
     # load date
     train_data, test_data = load_data(csv_file, column_name)
@@ -63,23 +63,30 @@ if __name__ == "__main__":
     all_data_y = all_data_y.reshape(all_data_y.shape[0], 1, 1)
 
     # ---------------------------------------------------------------------------
-    # predict
-    model_name = "saved_models_tt_avg/LSTM_002.h5"
-    predictions = predict_func(x_test, model_name, scaler_test)
+    # ------------------------predict test part----------------------------------
+    # model_name = "saved_models_tt_avg/LSTM_002.h5"
+    # predictions = predict_func(x_test, model_name, scaler_test)
 
     # model_name = "saved_models_mt_avg/LSTM_002.h5"
     # predictions = predict_func(all_data_x, model_name, scaler_all_data)
+
+    # ------------------------predict all data-----------------------------------
+    # model_name = "saved_models_tt_avg/LSTM_002.h5"
+    # predictions = predict_func(all_data_x, model_name, scaler_all_data)
+
+    model_name = "saved_models_mt_avg/LSTM_002.h5"
+    predictions = predict_func(all_data_x, model_name, scaler_all_data)
     # ---------------------------------------------------------------------------
 
     # plot predicted part and all ground truth
-    plot_predict_test_data(df, y_train, predictions)
+    # plot_predict_test_data(df, y_train, predictions)
 
     # plot all ground truth data and all predicted data
-    # labels = {
-    #     "ground_truth": "True Testing Value",
-    #     "predict_value": "Predicted Testing Value"
-    # }
-    # fig, ax = plt.subplots(figsize=(16, 9))
-    # fig, ax = plot_all_data(df, predictions, fig, ax, **labels)
-    # plt.legend()
-    # plt.show()
+    labels = {
+        "ground_truth": "True Testing Value",
+        "predict_value": "Predicted Testing Value"
+    }
+    fig, ax = plt.subplots(figsize=(16, 9))
+    fig, ax = plot_all_data(df[1:], predictions, fig, ax, **labels)
+    plt.legend()
+    plt.show()
