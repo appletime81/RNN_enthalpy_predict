@@ -97,7 +97,7 @@ def main():
     fig, ax = plot_all_data(df_tt[1:], predictions_tt, fig, ax, colors_tt, **labels_tt)
     fig, ax = plot_all_data(df_mt[1:], predictions_mt, fig, ax, colors_mt, **labels_mt)
     fig, ax = plot_all_data(df_enthalpy[1:], predictions_enthalpy, fig, ax, colors_enthalpy, **labels_enthalpy)
-    fig, ax = plot_all_data(df_8ch[1:], predictions_enthalpy*25.9, fig, ax, colors_8ch, **labels_8ch)
+    # fig, ax = plot_all_data(df_8ch[1:], predictions_enthalpy*25.9, fig, ax, colors_8ch, **labels_8ch)
     plt.legend()
     plt.show()
 
