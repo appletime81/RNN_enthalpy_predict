@@ -14,9 +14,9 @@ def mse(array1, array2):
 def main():
     # file name and column name
     csv_file = "TY_climate_2017_2018.csv"
-    column_name_tt_avg = "TT-Avg(â„ƒ)"  # column_name: TT-Avg(â„ƒ), MT-Avg(g)
+    column_name_tt_avg = "TT-Avg(¢J)"  # column_name: TT-Avg(???), MT-Avg(g)
     column_name_mt_avg = "MT-Avg(g)"
-    column_name_enthalpy = "ç„“å€¼è¨ˆç®—(kj/kg)"
+    column_name_enthalpy = "ÖU­È­pºâ(kj/kg)"
 
     df = pd.read_csv(csv_file)
     df_tt = df[column_name_tt_avg].values
