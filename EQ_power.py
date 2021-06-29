@@ -1,6 +1,6 @@
+import matplotlib.pyplot as plt
 from openpyxl import load_workbook
-from load_data import *
-from plot import predict_func, enthalpy
+from plot import *
 
 
 def mse(array1, array2):
@@ -80,11 +80,21 @@ def power_forecast(file):
         }
     )
     print(f"mse value: {mse_value}")
+
+    # plot
+    labels_8ch = {
+        "ground_truth": "True 8CH",
+        "predict_value": "Predicted 8CH"
+    }
+    colors_8ch = ["darkviolet", "plum"]
+    fig, ax = plt.subplots(figsize=(25, 16))
+    fig, ax = plot_all_data(df_8ch, pred_power, fig, ax, colors_8ch, **labels_8ch)
+    plt.legend()
+    plt.savefig("temp.jpg")
     return df_pred_power
 
 
 if __name__ == "__main__":
     file_name = "EQ Power 3.xlsx"
-    # excelWriter = pd.ExcelWriter(file_name, engine="openpyxl")
     df = power_forecast(file_name)
     add_data_2_new_sheet(df, file_name)
