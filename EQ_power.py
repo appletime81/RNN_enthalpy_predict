@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 from openpyxl import load_workbook
 from plot import *
 
